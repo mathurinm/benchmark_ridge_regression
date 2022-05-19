@@ -2,30 +2,27 @@ from benchopt import BaseObjective
 
 
 class Objective(BaseObjective):
-    name = "Ordinary Least Squares"
+    name = "Ridge Regression"
 
     parameters = {
-        'fit_intercept': [False],
-    }
+        "fit_intercept": [False, True],
+        "reg": [1, 10]},
 
-    def __init__(self, fit_intercept=False):
+    def __init__(self, fit_intercept=False, reg=1):
         self.fit_intercept = fit_intercept
+        self.reg = reg
 
     def set_data(self, X, y):
-        # The keyword arguments of this function are the keys of the `data`
-        # dict in the `get_data` function of the dataset.
-        # They are customizable.
         self.X, self.y = X, y
 
-    def compute(self, beta):
-        # The arguments of this function are the outputs of the
-        # `get_result` method of the solver.
-        # They are customizable.
-        diff = self.y - self.X.dot(beta)
-        return .5 * diff.dot(diff)
+    def compute(self, theta):
+        c = 0
+        if self.fit_intercept:
+            theta, c = theta[:-1], theta[-1]
+        res = self.y - self.X @ theta - c
+
+        return .5 * res @ res + 0.5 * self.reg * theta @ theta
 
     def to_dict(self):
-        # The output of this function are the keyword arguments
-        # for the `set_objective` method of the solver.
-        # They are customizable.
-        return dict(X=self.X, y=self.y, fit_intercept=self.fit_intercept)
+        return dict(X=self.X, y=self.y,
+                    fit_intercept=self.fit_intercept, reg=self.reg)
