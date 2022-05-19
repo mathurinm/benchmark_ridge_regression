@@ -2,8 +2,10 @@ from benchopt import BaseSolver
 from benchopt import safe_import_context
 
 with safe_import_context() as import_ctx:
+    import warnings
     import numpy as np
     from sklearn.linear_model import Ridge
+    from sklearn.exceptions import ConvergenceWarning
 
 
 class Solver(BaseSolver):
@@ -23,7 +25,10 @@ class Solver(BaseSolver):
         self.clf = Ridge(
             fit_intercept=fit_intercept, alpha=reg, solver=self.solver)
 
+        warnings.filterwarnings('ignore', category=ConvergenceWarning)
+
     def run(self, n_iter):
+        self.clf.max_iter = n_iter + 1
         self.clf.fit(self.X, self.y)
 
     def get_result(self):
