@@ -23,7 +23,8 @@ class Solver(BaseSolver):
     def set_objective(self, X, y, reg=1, fit_intercept=False):
         self.X, self.y, self.fit_intercept = X, y, fit_intercept
         self.clf = Ridge(
-            fit_intercept=fit_intercept, alpha=reg, solver=self.solver)
+            fit_intercept=fit_intercept, alpha=reg, solver=self.solver,
+            tol=1e-10)
 
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
