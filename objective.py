@@ -6,7 +6,8 @@ class Objective(BaseObjective):
 
     parameters = {
         "fit_intercept": [False, True],
-        "reg": [1, 10]},
+        "reg": [1, 10]
+    }
 
     def __init__(self, fit_intercept=False, reg=1):
         self.fit_intercept = fit_intercept
