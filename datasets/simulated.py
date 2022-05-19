@@ -32,4 +32,4 @@ class Dataset(BaseDataset):
         # They are customizable.
         data = dict(X=X, y=y)
 
-        return self.n_features, data
+        return data
